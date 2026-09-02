@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planificador de Rotación - Departamento de Caja</title>
+<style>
+:root{
+  --bg:#f7f8fb;--card:#fff;--ink:#243043;--muted:#667085;--line:#dfe5ec;
+  --rose:#f7d9df;--lav:#e8ddf7;--blue:#dcecf8;--green:#dff2e5;
+  --yellow:#fff1cc;--peach:#fde3d5;--accent:#6573b8;--danger:#b42318;
+  --danger-bg:#fee4e2;--ok:#067647;--ok-bg:#dcfae6;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f8f7fc,#f3f7f9)}
+.wrap{max-width:1450px;margin:auto;padding:24px}
+.header{background:linear-gradient(135deg,#e9e3f7,#dcecf8);border:1px solid #d8dce8;border-radius:22px;padding:24px;box-shadow:0 10px 28px rgba(44,55,80,.08);margin-bottom:18px}
+h1{margin:0 0 6px;font-size:28px}.subtitle{color:var(--muted);font-size:14px}
+.toolbar{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:12px;margin-top:18px}
+label{font-size:12px;font-weight:700;color:#475467;display:block;margin-bottom:6px}
+input,select,button{width:100%;padding:10px 11px;border:1px solid #cfd6df;border-radius:10px;background:#fff;color:#253044;font-size:14px}
+button{cursor:pointer;font-weight:700}.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn-soft{background:#fff;border-color:#b9c2d0}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:18px}
+.card,.section{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 18px rgba(44,55,80,.05);overflow:hidden}
+.card h2{font-size:17px;margin:0;padding:16px 18px;border-bottom:1px solid var(--line)}
+.people{padding:12px;max-height:1180px;overflow:auto}.person{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px;background:#fff}
+.person .name{font-weight:800;font-size:13px}.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{font-size:10px;padding:4px 7px;border-radius:999px;background:#eef2f6;color:#475467}.chip.super{background:var(--lav)}.chip.aux{background:var(--blue)}.chip.floor{background:var(--green)}.chip.club{background:var(--yellow)}.chip.superm{background:var(--peach)}
+.rules{padding:12px 16px 16px;font-size:12px;color:#475467;line-height:1.5}
+.main{display:flex;flex-direction:column;gap:14px}.section-title{padding:13px 16px;font-size:15px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.principal .section-title{background:var(--lav)}.cosmetico .section-title{background:var(--rose)}.caballero .section-title{background:var(--blue)}
+.supermercado .section-title{background:var(--green)}.boutique .section-title{background:var(--peach)}.other .section-title{background:var(--yellow)}
+.slots{padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.caballero .slots{grid-template-columns:repeat(4,1fr)}
+.slot{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fcfcfd}.slot-title{font-size:12px;font-weight:800;margin-bottom:8px}.hint{font-size:10px;color:var(--muted);margin-top:6px}
+.status{padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#fff;line-height:1.5;font-size:13px}.status.ok{background:var(--ok-bg);border-color:#abefc6;color:#05603a}.status.bad{background:var(--danger-bg);border-color:#fecdca;color:#912018}
+.issue{margin:4px 0}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px}.sum{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}.sum b{display:block;font-size:20px;margin-top:4px}.small{font-size:11px;color:var(--muted)}
+.rest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px}.rest-item{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:12px}.rest-item input{width:auto}
+.note{padding:10px 12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}.toolbar{grid-template-columns:repeat(2,1fr)}.slots,.caballero .slots{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.toolbar,.slots,.caballero .slots,.summary,.rest-grid{grid-template-columns:1fr}}
+@media print{body{background:#fff}.wrap{max-width:none;padding:0}.layout{grid-template-columns:280px 1fr}.card,.section,.header{box-shadow:none}button{display:none}.people{max-height:none;overflow:visible}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="header">
+  <h1>Planificador de Rotación · Departamento de Caja</h1>
+  <div class="subtitle">Shopping Center · Control diario de cobertura, turnos, descansos y habilidades</div>
+  <div class="toolbar">
+    <div><label>Fecha</label><input type="date" id="fecha"></div>
+    <div><label>Día</label><input type="text" id="dia" readonly></div>
+    <div><label>Responsable</label><input type="text" id="responsable" placeholder="Nombre"></div>
+    <div><label>Acción</label><button class="btn-primary" onclick="validar()">Validar planificación</button></div>
+    <div><label>&nbsp;</label><button class="btn-soft" onclick="window.print()">Imprimir / Guardar PDF</button></div>
+  </div>
+</div>
+
+<div class="layout">
+<aside class="card">
+<h2>Personal y habilidades</h2>
+<div class="people" id="people"></div>
+<div class="rules">
+<b>Reglas configuradas</b><br>
+• Lisbeth: Supervisora de Caja.<br>
+• Amabelis: Auxiliar Principal de Lisbeth. Elvia y Gisela: auxiliares de Lisbeth.<br>
+• Estas cuatro colaboradoras no deben ocupar una caja regular como asignación fija.<br>
+• Encargadas de piso: Mitzy, Noris y Daritza.<br>
+• Cobro general autorizado: Daritza, Noris, Lisbeth, Amabelis, Elvia y Gisela.<br>
+• Caja Principal debe mantener al menos una autorizada para apertura, almuerzo y salida.<br>
+• Caballero/Club requiere 4 colaboradoras y al menos una con conocimiento de Club.<br>
+• Supermercado solo permite personal con carnet habilitado.<br>
+• Boutique mantiene 1 cajera en turno 10:20.<br>
+• Si trabaja domingo, debe tener 1 día libre en la semana.
+</div>
+</aside>
+
+<main class="main">
+<div class="summary">
+ <div class="sum"><span class="small">Personal total</span><b>21</b></div>
+ <div class="sum"><span class="small">Cajeras regulares</span><b>14</b></div>
+ <div class="sum"><span class="small">Funciones especiales</span><b>4</b></div>
+ <div class="sum"><span class="small">Encargadas de piso</span><b>3</b></div>
+</div>
+
+<section class="section principal">
+<div class="section-title"><span>Caja Principal · 3 posiciones</span><span>8:50 · 9:50 · 10:20</span></div>
+<div class="slots" id="principal"></div>
+<div class="note">Debe existir cobertura de personal autorizado para cobro general en apertura, almuerzo y salida.</div>
+</section>
+
+<section class="section cosmetico">
+<div class="section-title"><span>Cosmético · 3 posiciones</span><span>8:50 · 9:50 · 10:20</span></div>
+<div class="slots" id="cosmetico"></div>
+</section>
+
+<section class="section caballero">
+<div class="section-title"><span>Caballero / Club · 4 posiciones</span><span>Cobertura Club obligatoria</span></div>
+<div class="slots" id="caballero"></div>
+</section>
+
+<section class="section supermercado">
+<div class="section-title"><span>Supermercado · 1 posición</span><span>8:00 · 8:50 · 10:20 / 10:50</span></div>
+<div class="slots" id="supermercado"></div>
+<div class="note">Encargada base: Eladia. Daritza cubre sus días libres. También pueden asignarse colaboradoras con carnet.</div>
+</section>
+
+<section class="section boutique">
+<div class="section-title"><span>Boutique · 1 posición</span><span>10:20</span></div>
+<div class="slots" id="boutique"></div>
+</section>
+
+<section class="section other">
+<div class="section-title"><span>Día libre / función especial</span><span>Control semanal</span></div>
+<div class="rest-grid" id="restGrid"></div>
+</section>
+
+<div id="status" class="status">Complete la planificación y presione <b>Validar planificación</b>.</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn-primary" onclick="guardarNube()">Guardar planificación compartida</button>
+<button class="btn-soft" onclick="cargarNube()">Cargar planificación por fecha</button>
+<button class="btn-soft" onclick="guardar()">Guardar copia en este equipo</button>
+<button class="btn-soft" onclick="cargar()">Cargar copia local</button>
+<button class="btn-soft" onclick="limpiar()">Limpiar asignaciones</button>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwX7JtXlYOfXznrWiXdeSZAL8JXp4ZCz-YoWzwAuPcDFEIuDd6vFPD8LWlOkhc_5caTbw/exec";
+
+const personal=[
+ {n:"Lisbeth Núñez",rol:"Supervisora de Caja",especial:true,cobro:true,supervisora:true},
+ {n:"Amabelis Atencio",rol:"Auxiliar Principal",especial:true,cobro:true},
+ {n:"Elvia Araúz",rol:"Auxiliar",especial:true,cobro:true},
+ {n:"Gisela Saldaña",rol:"Auxiliar",especial:true,cobro:true},
+ {n:"Daritza Cedeño",rol:"Encargada de piso",piso:true,cobro:true,super:true},
+ {n:"Daryen Serrano",rol:"Cajera"},
+ {n:"Delfina Guerra de Tejedor",rol:"Cajera",super:true},
+ {n:"Diana Arauz",rol:"Cajera",super:true},
+ {n:"Durbys Atencio",rol:"Cajera"},
+ {n:"Eira Castro",rol:"Cajera"},
+ {n:"Eladia Araúz",rol:"Encargada Supermercado",super:true},
+ {n:"Genesis Jimenez",rol:"Cajera"},
+ {n:"Glendys Concepcion",rol:"Cajera"},
+ {n:"Isa González",rol:"Cajera",club:true,super:true},
+ {n:"Itzel Castillo",rol:"Cajera",super:true},
+ {n:"Marilyn Avilés",rol:"Cajera",club:true,super:true},
+ {n:"Mitzy Cáceres",rol:"Encargada de piso",piso:true,club:true},
+ {n:"Nayelis Morales",rol:"Cajera"},
+ {n:"Noris Rosas",rol:"Encargada de piso",piso:true,cobro:true,club:true},
+ {n:"Vilma Rivera",rol:"Cajera",club:true,super:true},
+ {n:"Yarohanis Gonzalez",rol:"Cajera"}
+];
+
+const config={
+ principal:{count:3,times:["8:50","9:50","10:20"]},
+ cosmetico:{count:3,times:["8:50","9:50","10:20"]},
+ caballero:{count:4,times:["8:00","8:50","10:20","10:50"]},
+ supermercado:{count:1,times:["8:00","8:50","10:20","10:50"]},
+ boutique:{count:1,times:["10:20"]}
+};
+
+function chips(p){
+ let a=[];
+ if(p.supervisora)a.push('<span class="chip super">Supervisora</span>');
+ if(p.rol==="Auxiliar")a.push('<span class="chip aux">Auxiliar</span>');
+ if(p.piso)a.push('<span class="chip floor">Encargada piso</span>');
+ if(p.club)a.push('<span class="chip club">Club</span>');
+ if(p.super)a.push('<span class="chip superm">Carnet Super</span>');
+ if(p.cobro)a.push('<span class="chip">Cobro general</span>');
+ return a.join("");
+}
+function renderPeople(){
+ document.getElementById("people").innerHTML=personal.map(p=>`<div class="person"><div class="name">${p.n}</div><div class="small">${p.rol}</div><div class="chips">${chips(p)}</div></div>`).join("");
+}
+function opts(area){
+ return '<option value="">— Seleccionar —</option>'+personal.map(p=>{
+   let disabled=(area==="supermercado"&&!p.super)||(["cosmetico","caballero","supermercado","boutique"].includes(area)&&p.especial);
+   return `<option value="${p.n}" ${disabled?'disabled':''}>${p.n}${disabled?' · no habilitada':''}</option>`;
+ }).join("");
+}
+function renderArea(area){
+ const el=document.getElementById(area), c=config[area];
+ let out="";
+ for(let i=0;i<c.count;i++){
+   const times = area==="supermercado" ? c.times : [c.times[i] || c.times[0]];
+   out+=`<div class="slot">
+     <div class="slot-title">Posición ${i+1}</div>
+     <label>Colaboradora</label><select class="assign" data-area="${area}" data-index="${i}">${opts(area)}</select>
+     <label style="margin-top:8px">Turno</label>
+     <select class="time" data-area="${area}" data-index="${i}">${times.map(t=>`<option>${t}</option>`).join("")}</select>
+     ${area==="principal"?`<label style="margin-top:8px">Cobertura</label><select class="coverage"><option>Apertura</option><option>Almuerzo</option><option>Salida</option></select>`:""}
+   </div>`;
+ }
+ el.innerHTML=out;
+}
+function renderRest(){
+ document.getElementById("restGrid").innerHTML=personal.map(p=>`<div class="rest-item"><input type="checkbox" class="rest" value="${p.n}"><span>${p.n}</span></div>`).join("");
+}
+function findP(n){return personal.find(p=>p.n===n)}
+function validar(){
+ let issues=[], vals=[...document.querySelectorAll(".assign")].map(x=>x.value).filter(Boolean);
+ let dup=vals.filter((x,i)=>vals.indexOf(x)!==i);
+ [...new Set(dup)].forEach(n=>issues.push(`${n} está asignada en más de una caja.`));
+
+ document.querySelectorAll(".assign").forEach(s=>{
+   if(!s.value)return;
+   let p=findP(s.value), area=s.dataset.area;
+   if(p.especial && ["cosmetico","caballero","supermercado","boutique"].includes(area))
+     issues.push(`${p.n} tiene función especial y no debe quedar fija en ${area}.`);
+   if(area==="supermercado"&&!p.super)issues.push(`${p.n} no está habilitada para Supermercado.`);
+ });
+
+ const cab=[...document.querySelectorAll('[data-area="caballero"].assign')].map(s=>findP(s.value)).filter(Boolean);
+ if(cab.length===4 && !cab.some(p=>p.club)) issues.push("Caballero/Club no tiene ninguna colaboradora con conocimiento de Club.");
+
+ const pri=[...document.querySelectorAll('[data-area="principal"].assign')].map(s=>findP(s.value)).filter(Boolean);
+ if(pri.length===3 && !pri.some(p=>p.cobro)) issues.push("Caja Principal no tiene ninguna colaboradora autorizada para cobro general.");
+
+ const rests=[...document.querySelectorAll(".rest:checked")].map(x=>x.value);
+ rests.forEach(n=>{if(vals.includes(n))issues.push(`${n} aparece asignada y también marcada como día libre.`)});
+
+ const fecha=document.getElementById("fecha").value;
+ if(fecha){
+   const d=new Date(fecha+"T12:00:00");
+   if(d.getDay()===0 && rests.length>0) issues.push("La fecha seleccionada es domingo: los días libres deben registrarse durante la semana, no el mismo domingo trabajado.");
+ }
+
+ const st=document.getElementById("status");
+ if(issues.length){
+   st.className="status bad";
+   st.innerHTML="<b>Revisar planificación:</b>"+issues.map(x=>`<div class="issue">• ${x}</div>`).join("");
+ }else{
+   st.className="status ok";
+   st.innerHTML="<b>Planificación validada.</b> No se detectaron incumplimientos en las reglas configuradas.";
+ }
+}
+function payloadNube(){
+ const asignaciones=[];
+ document.querySelectorAll(".assign").forEach(s=>{
+   if(!s.value)return;
+   const area=s.dataset.area;
+   const index=s.dataset.index;
+   const time=document.querySelector(`.time[data-area="${area}"][data-index="${index}"]`);
+   let cobertura="";
+   if(area==="principal"){
+     const slot=s.closest(".slot");
+     const cov=slot ? slot.querySelector(".coverage") : null;
+     cobertura=cov ? cov.value : "";
+   }
+   asignaciones.push({
+     area: area,
+     posicion: `Posición ${Number(index)+1}`,
+     colaboradora: s.value,
+     turno: time ? time.value : "",
+     cobertura: cobertura
+   });
+ });
+ return {
+   fecha: fecha.value,
+   responsable: responsable.value.trim(),
+   asignaciones: asignaciones,
+   diasLibres: [...document.querySelectorAll(".rest:checked")].map(x=>x.value)
+ };
+}
+
+async function guardarNube(){
+ const datos=payloadNube();
+ if(!datos.fecha){alert("Seleccione una fecha.");return;}
+ if(!datos.responsable){alert("Escriba el nombre del responsable.");return;}
+ validar();
+ const st=document.getElementById("status");
+ st.className="status";
+ st.innerHTML="Guardando planificación compartida...";
+ try{
+   const r=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify(datos)});
+   const out=await r.json();
+   if(!out.ok) throw new Error(out.mensaje||"No se pudo guardar.");
+   localStorage.setItem("planCaja",JSON.stringify(snapshot()));
+   st.className="status ok";
+   st.innerHTML=`<b>Planificación guardada en Google Sheets.</b> ${out.registros||0} registros. Ya puede cargarse desde otra computadora.`;
+ }catch(err){
+   st.className="status bad";
+   st.innerHTML=`<b>No se pudo guardar en Google Sheets.</b> ${err.message}`;
+ }
+}
+
+function limpiarSoloAsignaciones(){
+ document.querySelectorAll(".assign").forEach(s=>s.value="");
+ document.querySelectorAll(".rest").forEach(x=>x.checked=false);
+}
+
+async function cargarNube(){
+ const f=fecha.value;
+ if(!f){alert("Seleccione la fecha que desea consultar.");return;}
+ const st=document.getElementById("status");
+ st.className="status";
+ st.innerHTML="Cargando planificación desde Google Sheets...";
+ try{
+   const r=await fetch(`${APPS_SCRIPT_URL}?accion=buscar&fecha=${encodeURIComponent(f)}&t=${Date.now()}`);
+   const out=await r.json();
+   if(!out.ok) throw new Error(out.mensaje||"No se pudo cargar.");
+   limpiarSoloAsignaciones();
+   const registros=out.registros||[];
+   registros.forEach(reg=>{
+     if(String(reg.diaLibre).toLowerCase()==="sí" || reg.area==="DÍA LIBRE"){
+       const cb=[...document.querySelectorAll(".rest")].find(x=>x.value===reg.colaboradora);
+       if(cb)cb.checked=true;
+       return;
+     }
+     const area=reg.area;
+     if(!config[area])return;
+     let idx=0;
+     const m=String(reg.posicion||"").match(/(\d+)/);
+     if(m) idx=Math.max(0,Number(m[1])-1);
+     const sel=document.querySelector(`.assign[data-area="${area}"][data-index="${idx}"]`);
+     if(sel) sel.value=reg.colaboradora||"";
+     const tm=document.querySelector(`.time[data-area="${area}"][data-index="${idx}"]`);
+     if(tm && reg.turno){
+       if(![...tm.options].some(o=>o.value===reg.turno)) tm.add(new Option(reg.turno,reg.turno));
+       tm.value=reg.turno;
+     }
+     if(area==="principal" && reg.cobertura){
+       const slot=sel ? sel.closest(".slot") : null;
+       const cov=slot ? slot.querySelector(".coverage") : null;
+       if(cov) cov.value=reg.cobertura;
+     }
+     if(reg.responsable) responsable.value=reg.responsable;
+   });
+   if(registros.length===0){
+     st.className="status";
+     st.innerHTML=`No hay planificación guardada para <b>${f}</b>.`;
+   }else{
+     st.className="status ok";
+     st.innerHTML=`<b>Planificación cargada desde Google Sheets.</b> ${registros.length} registros encontrados para ${f}.`;
+     validar();
+   }
+ }catch(err){
+   st.className="status bad";
+   st.innerHTML=`<b>No se pudo cargar desde Google Sheets.</b> ${err.message}`;
+ }
+}
+
+function snapshot(){
+ const data={fecha:fecha.value,responsable:responsable.value,assign:[],rest:[]};
+ document.querySelectorAll(".assign").forEach(s=>data.assign.push({area:s.dataset.area,index:s.dataset.index,value:s.value}));
+ document.querySelectorAll(".rest:checked").forEach(x=>data.rest.push(x.value));
+ return data;
+}
+function guardar(){localStorage.setItem("planCaja",JSON.stringify(snapshot()));alert("Planificación guardada en este equipo.");}
+function cargar(){
+ const raw=localStorage.getItem("planCaja");if(!raw)return alert("No hay planificación guardada.");
+ const d=JSON.parse(raw);fecha.value=d.fecha||"";responsable.value=d.responsable||"";updateDay();
+ d.assign.forEach(a=>{let s=document.querySelector(`.assign[data-area="${a.area}"][data-index="${a.index}"]`);if(s)s.value=a.value});
+ document.querySelectorAll(".rest").forEach(x=>x.checked=d.rest.includes(x.value));validar();
+}
+function limpiar(){document.querySelectorAll(".assign").forEach(s=>s.value="");document.querySelectorAll(".rest").forEach(x=>x.checked=false);document.getElementById("status").className="status";document.getElementById("status").innerHTML='Complete la planificación y presione <b>Validar planificación</b>.'}
+function updateDay(){
+ if(!fecha.value){dia.value="";return}
+ const d=new Date(fecha.value+"T12:00:00");dia.value=d.toLocaleDateString("es-PA",{weekday:"long"});
+}
+fecha.addEventListener("change",updateDay);
+renderPeople();["principal","cosmetico","caballero","supermercado","boutique"].forEach(renderArea);renderRest();
+fecha.value=new Date().toISOString().slice(0,10);updateDay();
+</script>
+</body>
+</html>
