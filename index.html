@@ -193,6 +193,7 @@ const personal=[
  {n:"Eira Castro",rol:"Cajera"},
  {n:"Eladia Araúz",rol:"Encargada Supermercado",super:true},
  {n:"Genesis Jimenez",rol:"Cajera"},
+ {n:"Gabriela Gonzalez",rol:"Cajera"},
  {n:"Glendys Concepcion",rol:"Cajera"},
  {n:"Isa González",rol:"Cajera",club:true,super:true},
  {n:"Itzel Castillo",rol:"Cajera",super:true},
@@ -210,7 +211,7 @@ const config={
  principal:{count:3,times:HORARIOS_GENERALES},
  cosmetico:{count:3,times:HORARIOS_GENERALES},
  caballero:{count:4,times:HORARIOS_GENERALES},
- supermercado:{count:1,times:HORARIOS_GENERALES},
+ supermercado:{count:4,times:HORARIOS_GENERALES},
  boutique:{count:1,times:HORARIOS_GENERALES}
 };
 
@@ -246,7 +247,7 @@ function renderArea(area){
    principal:["8:50","9:50","10:20"],
    cosmetico:["8:50","9:50","10:20"],
    caballero:["8:00","8:50","10:20","10:50"],
-   supermercado:["8:00"],
+   supermercado:["8:00","8:50","10:20","10:50"],
    boutique:["10:20"]
  };
  let out="";
