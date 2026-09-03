@@ -36,8 +36,30 @@ button{cursor:pointer;font-weight:700}.btn-primary{background:var(--accent);colo
 .issue{margin:4px 0}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px}.sum{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}.sum b{display:block;font-size:20px;margin-top:4px}.small{font-size:11px;color:var(--muted)}
 .rest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px}.rest-item{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:12px}.rest-item input{width:auto}
 .note{padding:10px 12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.tabs{display:flex;gap:8px;padding:12px 12px 0;flex-wrap:wrap}
+.tab-btn{width:auto;padding:9px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.vac-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px}
+.vac-item{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+.vac-name{font-weight:800;font-size:12px;margin-bottom:8px}
+.vac-dates{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sunday-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px}
+.sun-item{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:8px;align-items:end}
+.sun-name{font-weight:800;font-size:12px}
+.avail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px}
+.avail-day{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+.avail-day b{display:block;margin-bottom:6px;font-size:12px}
+.avail-day .names{font-size:11px;color:var(--muted);line-height:1.45}
+.sunday-schedule{padding:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.schedule-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
+.schedule-card b{font-size:12px;display:block;margin-bottom:5px}
+.schedule-card .detail{font-size:11px;color:var(--muted);line-height:1.5}
+
+.badge-count{display:inline-block;padding:3px 7px;border-radius:999px;background:#eef2f6;font-size:10px;margin-left:5px}
+
 @media(max-width:1000px){.layout{grid-template-columns:1fr}.toolbar{grid-template-columns:repeat(2,1fr)}.slots,.caballero .slots{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){.toolbar,.slots,.caballero .slots,.summary,.rest-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.toolbar,.slots,.caballero .slots,.summary,.rest-grid,.vac-grid,.sunday-grid,.avail-grid,.sunday-schedule{grid-template-columns:1fr}.sun-item{grid-template-columns:1fr}}
 @media print{body{background:#fff}.wrap{max-width:none;padding:0}.layout{grid-template-columns:280px 1fr}.card,.section,.header{box-shadow:none}button{display:none}.people{max-height:none;overflow:visible}}
 </style>
 </head>
@@ -83,35 +105,64 @@ button{cursor:pointer;font-weight:700}.btn-primary{background:var(--accent);colo
 </div>
 
 <section class="section principal">
-<div class="section-title"><span>Caja Principal · 3 posiciones</span><span>8:50 · 9:50 · 10:20</span></div>
+<div class="section-title"><span>Caja Principal · 3 posiciones</span><span>8:00 · 8:50 · 9:50 · 10:20 · 10:50</span></div>
 <div class="slots" id="principal"></div>
 <div class="note">Debe existir cobertura de personal autorizado para cobro general en apertura, almuerzo y salida.</div>
 </section>
 
 <section class="section cosmetico">
-<div class="section-title"><span>Cosmético · 3 posiciones</span><span>8:50 · 9:50 · 10:20</span></div>
+<div class="section-title"><span>Cosmético · 3 posiciones</span><span>8:00 · 8:50 · 9:50 · 10:20 · 10:50</span></div>
 <div class="slots" id="cosmetico"></div>
 </section>
 
 <section class="section caballero">
-<div class="section-title"><span>Caballero / Club · 4 posiciones</span><span>Cobertura Club obligatoria</span></div>
+<div class="section-title"><span>Caballero / Club · 4 posiciones</span><span>8:00 · 8:50 · 9:50 · 10:20 · 10:50</span></div>
 <div class="slots" id="caballero"></div>
 </section>
 
 <section class="section supermercado">
-<div class="section-title"><span>Supermercado · 1 posición</span><span>8:00 · 8:50 · 10:20 / 10:50</span></div>
+<div class="section-title"><span>Supermercado · 1 posición</span><span>8:00 · 8:50 · 9:50 · 10:20 · 10:50</span></div>
 <div class="slots" id="supermercado"></div>
 <div class="note">Encargada base: Eladia. Daritza cubre sus días libres. También pueden asignarse colaboradoras con carnet.</div>
 </section>
 
 <section class="section boutique">
-<div class="section-title"><span>Boutique · 1 posición</span><span>10:20</span></div>
+<div class="section-title"><span>Boutique · 1 posición</span><span>8:00 · 8:50 · 9:50 · 10:20 · 10:50</span></div>
 <div class="slots" id="boutique"></div>
 </section>
 
 <section class="section other">
 <div class="section-title"><span>Día libre / función especial</span><span>Control semanal</span></div>
-<div class="rest-grid" id="restGrid"></div>
+<div class="tabs">
+  <button class="tab-btn active" data-tab="libres" onclick="abrirTabEstado('libres',this)">Días libres</button>
+  <button class="tab-btn" data-tab="vacaciones" onclick="abrirTabEstado('vacaciones',this)">Vacaciones</button>
+</div>
+<div id="tab-libres" class="tab-panel active">
+  <div class="rest-grid" id="restGrid"></div>
+</div>
+<div id="tab-vacaciones" class="tab-panel">
+  <div class="note">Registre el período de vacaciones. Al seleccionar una fecha del horario, el sistema identificará automáticamente quién está de vacaciones ese día.</div>
+  <div class="vac-grid" id="vacGrid"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;padding:0 12px 12px">
+    <button class="btn-primary" style="width:auto" onclick="guardarVacacionesNube()">Guardar vacaciones compartidas</button>
+    <button class="btn-soft" style="width:auto" onclick="cargarVacacionesNube()">Cargar vacaciones</button>
+  </div>
+</div>
+</section>
+
+<section class="section other" id="domingoSection">
+<div class="section-title"><span>Horario de Domingo · Día libre en la semana</span><span>Planificación dominical</span></div>
+<div class="note">Esta sección queda disponible al final del formulario. Al seleccionar una fecha domingo, aparecerán automáticamente las cajeras asignadas. Para cada una puede indicar el departamento donde cubrirá, el horario de domingo (9:20 en temporada lenta) y su día libre de la semana.</div>
+<div style="padding:12px 12px 0">
+  <button class="btn-soft" style="width:auto" onclick="generarLibresDomingo()">Generar / actualizar propuesta de libres</button>
+</div>
+<div class="sunday-grid" id="domingoGrid"></div>
+<div class="section-title" style="background:#f3f6fb"><span>Con qué cajeras se cuenta día tras día</span><span>Semana previa al domingo</span></div>
+<div class="avail-grid" id="disponibilidadGrid"></div>
+
+<div class="section-title" style="background:#e8ddf7"><span>Horario completo del domingo</span><span>Área · posición · turno · cajera · día libre</span></div>
+<div class="note">Esta última parte resume exactamente el horario del domingo y muestra al lado el día libre semanal asignado a cada cajera.</div>
+<div class="sunday-schedule" id="horarioDomingoGrid"></div>
 </section>
 
 <div id="status" class="status">Complete la planificación y presione <b>Validar planificación</b>.</div>
@@ -153,22 +204,29 @@ const personal=[
  {n:"Yarohanis Gonzalez",rol:"Cajera"}
 ];
 
+const HORARIOS_GENERALES=["8:00","8:50","9:50","10:20","10:50"];
+const HORARIO_DOMINGO="9:20";
 const config={
- principal:{count:3,times:["8:50","9:50","10:20"]},
- cosmetico:{count:3,times:["8:50","9:50","10:20"]},
- caballero:{count:4,times:["8:00","8:50","10:20","10:50"]},
- supermercado:{count:1,times:["8:00","8:50","10:20","10:50"]},
- boutique:{count:1,times:["10:20"]}
+ principal:{count:3,times:HORARIOS_GENERALES},
+ cosmetico:{count:3,times:HORARIOS_GENERALES},
+ caballero:{count:4,times:HORARIOS_GENERALES},
+ supermercado:{count:1,times:HORARIOS_GENERALES},
+ boutique:{count:1,times:HORARIOS_GENERALES}
 };
+
+let vacaciones = {};
+let libresDomingo = [];
+
 
 function chips(p){
  let a=[];
  if(p.supervisora)a.push('<span class="chip super">Supervisora</span>');
- if(p.rol==="Auxiliar")a.push('<span class="chip aux">Auxiliar</span>');
+ if(p.rol==="Auxiliar"||p.rol==="Auxiliar Principal")a.push(`<span class="chip aux">${p.rol}</span>`);
  if(p.piso)a.push('<span class="chip floor">Encargada piso</span>');
  if(p.club)a.push('<span class="chip club">Club</span>');
  if(p.super)a.push('<span class="chip superm">Carnet Super</span>');
  if(p.cobro)a.push('<span class="chip">Cobro general</span>');
+ if(estaDeVacaciones(p.n, fecha.value))a.push('<span class="chip" style="background:#f7d9df">Vacaciones</span>');
  return a.join("");
 }
 function renderPeople(){
@@ -176,20 +234,29 @@ function renderPeople(){
 }
 function opts(area){
  return '<option value="">— Seleccionar —</option>'+personal.map(p=>{
-   let disabled=(area==="supermercado"&&!p.super)||(["cosmetico","caballero","supermercado","boutique"].includes(area)&&p.especial);
-   return `<option value="${p.n}" ${disabled?'disabled':''}>${p.n}${disabled?' · no habilitada':''}</option>`;
+   const vac=estaDeVacaciones(p.n,fecha.value);
+   let disabled=vac||(area==="supermercado"&&!p.super)||(["cosmetico","caballero","supermercado","boutique"].includes(area)&&p.especial);
+   let motivo=vac?' · vacaciones':(disabled?' · no habilitada':'');
+   return `<option value="${p.n}" ${disabled?'disabled':''}>${p.n}${motivo}</option>`;
  }).join("");
 }
 function renderArea(area){
  const el=document.getElementById(area), c=config[area];
+ const defaults={
+   principal:["8:50","9:50","10:20"],
+   cosmetico:["8:50","9:50","10:20"],
+   caballero:["8:00","8:50","10:20","10:50"],
+   supermercado:["8:00"],
+   boutique:["10:20"]
+ };
  let out="";
  for(let i=0;i<c.count;i++){
-   const times = area==="supermercado" ? c.times : [c.times[i] || c.times[0]];
+   const def=(defaults[area]&&defaults[area][i])?defaults[area][i]:"8:50";
    out+=`<div class="slot">
      <div class="slot-title">Posición ${i+1}</div>
      <label>Colaboradora</label><select class="assign" data-area="${area}" data-index="${i}">${opts(area)}</select>
      <label style="margin-top:8px">Turno</label>
-     <select class="time" data-area="${area}" data-index="${i}">${times.map(t=>`<option>${t}</option>`).join("")}</select>
+     <select class="time" data-area="${area}" data-index="${i}">${HORARIOS_GENERALES.map(t=>`<option ${t===def?"selected":""}>${t}</option>`).join("")}</select>
      ${area==="principal"?`<label style="margin-top:8px">Cobertura</label><select class="coverage"><option>Apertura</option><option>Almuerzo</option><option>Salida</option></select>`:""}
    </div>`;
  }
@@ -197,6 +264,178 @@ function renderArea(area){
 }
 function renderRest(){
  document.getElementById("restGrid").innerHTML=personal.map(p=>`<div class="rest-item"><input type="checkbox" class="rest" value="${p.n}"><span>${p.n}</span></div>`).join("");
+}
+
+function abrirTabEstado(tab,btn){
+ document.querySelectorAll(".tab-panel").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));
+ document.getElementById("tab-"+tab).classList.add("active");
+ if(btn)btn.classList.add("active");
+}
+
+function renderVacaciones(){
+ document.getElementById("vacGrid").innerHTML=personal.map(p=>{
+   const v=vacaciones[p.n]||{desde:"",hasta:""};
+   return `<div class="vac-item">
+     <div class="vac-name">${p.n}</div>
+     <div class="vac-dates">
+       <div><label>Desde</label><input type="date" class="vac-desde" data-name="${p.n}" value="${v.desde||""}" onchange="actualizarVacacion(this)"></div>
+       <div><label>Hasta</label><input type="date" class="vac-hasta" data-name="${p.n}" value="${v.hasta||""}" onchange="actualizarVacacion(this)"></div>
+     </div>
+   </div>`;
+ }).join("");
+}
+
+function actualizarVacacion(el){
+ const n=el.dataset.name;
+ vacaciones[n]=vacaciones[n]||{desde:"",hasta:""};
+ vacaciones[n][el.classList.contains("vac-desde")?"desde":"hasta"]=el.value;
+ renderPeople();
+ reconstruirOpciones();
+ actualizarDisponibilidad();
+}
+
+function estaDeVacaciones(nombre,fechaIso){
+ const v=vacaciones[nombre];
+ if(!v||!v.desde||!v.hasta||!fechaIso)return false;
+ return fechaIso>=v.desde && fechaIso<=v.hasta;
+}
+
+function reconstruirOpciones(){
+ document.querySelectorAll(".assign").forEach(sel=>{
+   const actual=sel.value,area=sel.dataset.area;
+   sel.innerHTML=opts(area);
+   if(actual && [...sel.options].some(o=>o.value===actual&&!o.disabled))sel.value=actual;
+   else if(actual && estaDeVacaciones(actual,fecha.value))sel.value="";
+ });
+}
+
+function trabajadoresDomingo(){
+ return [...new Set([...document.querySelectorAll(".assign")].map(x=>x.value).filter(Boolean))];
+}
+
+function diasSemanaDomingo(){
+ if(!fecha.value)return [];
+ const domingo=new Date(fecha.value+"T12:00:00");
+ const nombres=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+ return nombres.map((nombre,i)=>{
+   const d=new Date(domingo);
+   d.setDate(domingo.getDate()-(6-i));
+   return {nombre,fecha:d.toISOString().slice(0,10)};
+ });
+}
+
+function generarLibresDomingo(){
+ const d=fecha.value?new Date(fecha.value+"T12:00:00"):null;
+ if(!d||d.getDay()!==0){alert("Esta opción se activa cuando la fecha seleccionada es domingo.");return;}
+ const trabajadores=trabajadoresDomingo();
+ if(!trabajadores.length){alert("Primero asigne las cajeras que trabajarán el domingo.");return;}
+ const dias=diasSemanaDomingo();
+ libresDomingo=trabajadores.map((n,i)=>{
+   const anterior=libresDomingo.find(x=>x.nombre===n);
+   const areaSel=[...document.querySelectorAll(".assign")].find(x=>x.value===n);
+   return {
+     nombre:n,
+     dia:anterior?.dia||dias[i%dias.length].fecha,
+     departamento:anterior?.departamento||(areaSel?areaSel.dataset.area:"principal"),
+     horarioDomingo:anterior?.horarioDomingo||HORARIO_DOMINGO
+   };
+ });
+ renderDomingo();
+}
+
+function areaNombre(area){
+ return {principal:"Caja Principal",cosmetico:"Cosmético",caballero:"Caballero / Club",supermercado:"Supermercado",boutique:"Boutique"}[area]||area;
+}
+
+function renderDomingo(){
+ const sec=document.getElementById("domingoSection");
+ const d=fecha.value?new Date(fecha.value+"T12:00:00"):null;
+ const esDomingo=!!(d&&d.getDay()===0);
+ sec.style.display="block";
+
+ const trabajadores=esDomingo?trabajadoresDomingo():[];
+ const dias=diasSemanaDomingo();
+ const deps=[["principal","Caja Principal"],["cosmetico","Cosmético"],["caballero","Caballero / Club"],["supermercado","Supermercado"],["boutique","Boutique"]];
+
+ trabajadores.forEach((n,i)=>{
+   if(!libresDomingo.some(x=>x.nombre===n)){
+     const areaSel=[...document.querySelectorAll(".assign")].find(x=>x.value===n);
+     libresDomingo.push({nombre:n,dia:dias[i%dias.length]?.fecha||"",departamento:areaSel?areaSel.dataset.area:"principal",horarioDomingo:HORARIO_DOMINGO});
+   }
+ });
+ libresDomingo=libresDomingo.filter(x=>trabajadores.includes(x.nombre));
+
+ document.getElementById("domingoGrid").innerHTML=!esDomingo?'<div class="note" style="grid-column:1/-1;background:#fff8e6;border:1px solid #f3d58a;border-radius:10px">Seleccione una fecha que sea <b>domingo</b> para preparar este horario. El horario predeterminado de domingo es <b>9:20</b>.</div>':trabajadores.length?trabajadores.map(n=>{
+   const r=libresDomingo.find(x=>x.nombre===n);
+   return `<div class="sun-item">
+     <div class="sun-name">${n}</div>
+     <div><label>Departamento domingo</label><select onchange="cambiarDepartamentoDomingo('${n.replace(/'/g,"\\'")}',this.value)">
+       ${deps.map(([v,t])=>`<option value="${v}" ${r.departamento===v?"selected":""}>${t}</option>`).join("")}
+     </select></div>
+     <div><label>Horario domingo</label><select onchange="cambiarHorarioDomingo('${n.replace(/'/g,"\\'")}',this.value)">
+       ${[HORARIO_DOMINGO,...HORARIOS_GENERALES].map(t=>`<option value="${t}" ${r.horarioDomingo===t?"selected":""}>${t}</option>`).join("")}
+     </select></div>
+     <div><label>Día libre</label><select onchange="cambiarLibreDomingo('${n.replace(/'/g,"\\'")}',this.value)">
+       ${dias.map(x=>`<option value="${x.fecha}" ${x.fecha===r.dia?"selected":""}>${x.nombre}</option>`).join("")}
+     </select></div>
+   </div>`;
+ }).join(""):'<div class="note" style="grid-column:1/-1">Asigne primero el personal que trabajará el domingo.</div>';
+
+ actualizarDisponibilidad();
+ renderHorarioDomingo();
+}
+
+function cambiarLibreDomingo(nombre,dia){
+ const r=libresDomingo.find(x=>x.nombre===nombre); if(r)r.dia=dia;
+ actualizarDisponibilidad(); renderHorarioDomingo();
+}
+function cambiarDepartamentoDomingo(nombre,dep){
+ const r=libresDomingo.find(x=>x.nombre===nombre); if(r)r.departamento=dep;
+ renderHorarioDomingo();
+}
+function cambiarHorarioDomingo(nombre,hora){
+ const r=libresDomingo.find(x=>x.nombre===nombre); if(r)r.horarioDomingo=hora;
+ renderHorarioDomingo();
+}
+
+function nombreDiaLibre(fechaIso){
+ const d=diasSemanaDomingo().find(x=>x.fecha===fechaIso);
+ return d?d.nombre:"Sin definir";
+}
+
+function renderHorarioDomingo(){
+ const box=document.getElementById("horarioDomingoGrid");
+ if(!box)return;
+ const d=fecha.value?new Date(fecha.value+"T12:00:00"):null;
+ if(!d||d.getDay()!==0){box.innerHTML='<div class="note" style="grid-column:1/-1">El resumen del horario completo se mostrará al seleccionar un domingo.</div>';return;}
+ const filas=libresDomingo.filter(x=>trabajadoresDomingo().includes(x.nombre));
+ box.innerHTML=filas.length?filas.map(x=>`<div class="schedule-card">
+   <b>${areaNombre(x.departamento)}</b>
+   <div class="detail"><strong>Cajera:</strong> ${x.nombre}<br>
+   <strong>Horario domingo:</strong> ${x.horarioDomingo||HORARIO_DOMINGO}<br>
+   <strong>Día libre:</strong> ${nombreDiaLibre(x.dia)}</div>
+ </div>`).join(""):'<div class="note" style="grid-column:1/-1">Todavía no hay cajeras asignadas en el horario del domingo.</div>';
+}
+
+function actualizarDisponibilidad(){
+ const box=document.getElementById("disponibilidadGrid");
+ if(!box)return;
+ const d=fecha.value?new Date(fecha.value+"T12:00:00"):null;
+ if(!d||d.getDay()!==0){box.innerHTML="";return;}
+ const dias=diasSemanaDomingo();
+ box.innerHTML=dias.map(x=>{
+   const libres=libresDomingo.filter(r=>r.dia===x.fecha).map(r=>r.nombre);
+   const vac=personal.filter(p=>estaDeVacaciones(p.n,x.fecha)).map(p=>p.n);
+   const noDisponibles=[...new Set([...libres,...vac])];
+   const disponibles=personal.filter(p=>!noDisponibles.includes(p.n)).map(p=>p.n);
+   return `<div class="avail-day">
+      <b>${x.nombre}<span class="badge-count">${disponibles.length} disponibles</span></b>
+      <div class="names"><strong>Libres:</strong> ${libres.length?libres.join(", "):"Ninguna"}<br>
+      <strong>Vacaciones:</strong> ${vac.length?vac.join(", "):"Ninguna"}<br>
+      <strong>Disponibles:</strong> ${disponibles.join(", ")}</div>
+   </div>`;
+ }).join("");
 }
 function findP(n){return personal.find(p=>p.n===n)}
 function validar(){
@@ -220,11 +459,13 @@ function validar(){
 
  const rests=[...document.querySelectorAll(".rest:checked")].map(x=>x.value);
  rests.forEach(n=>{if(vals.includes(n))issues.push(`${n} aparece asignada y también marcada como día libre.`)});
+ vals.forEach(n=>{if(estaDeVacaciones(n,fecha.value))issues.push(`${n} está de vacaciones en la fecha seleccionada y no debe estar asignada.`);});
 
  const fecha=document.getElementById("fecha").value;
  if(fecha){
    const d=new Date(fecha+"T12:00:00");
    if(d.getDay()===0 && rests.length>0) issues.push("La fecha seleccionada es domingo: los días libres deben registrarse durante la semana, no el mismo domingo trabajado.");
+   if(d.getDay()===0 && vals.length>0 && libresDomingo.length===0) issues.push("Genere los días libres de las cajeras que trabajan el domingo.");
  }
 
  const st=document.getElementById("status");
@@ -257,12 +498,57 @@ function payloadNube(){
      cobertura: cobertura
    });
  });
+ if(fecha.value && new Date(fecha.value+"T12:00:00").getDay()===0){
+   libresDomingo.forEach(x=>asignaciones.push({
+     area:"LIBRE_SEMANA",
+     posicion:x.departamento||"",
+     colaboradora:x.nombre,
+     turno:x.dia,
+     cobertura:x.horarioDomingo||HORARIO_DOMINGO
+   }));
+ }
  return {
    fecha: fecha.value,
    responsable: responsable.value.trim(),
    asignaciones: asignaciones,
    diasLibres: [...document.querySelectorAll(".rest:checked")].map(x=>x.value)
  };
+}
+
+async function guardarVacacionesNube(){
+ const registros=[];
+ Object.entries(vacaciones).forEach(([nombre,v])=>{
+   if(v.desde&&v.hasta)registros.push({
+     area:"VACACIONES",
+     posicion:"",
+     colaboradora:nombre,
+     turno:v.desde,
+     cobertura:v.hasta
+   });
+ });
+ const datos={fecha:"VACACIONES",responsable:responsable.value.trim()||"Control de vacaciones",asignaciones:registros,diasLibres:[]};
+ try{
+   const r=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify(datos)});
+   const out=await r.json();
+   if(!out.ok)throw new Error(out.mensaje||"No se pudo guardar.");
+   alert("Vacaciones guardadas correctamente.");
+   reconstruirOpciones();renderPeople();actualizarDisponibilidad();
+ }catch(err){alert("No se pudieron guardar las vacaciones: "+err.message);}
+}
+
+async function cargarVacacionesNube(){
+ try{
+   const r=await fetch(`${APPS_SCRIPT_URL}?accion=buscar&fecha=VACACIONES&t=${Date.now()}`);
+   const out=await r.json();
+   if(!out.ok)throw new Error(out.mensaje||"No se pudo cargar.");
+   vacaciones={};
+   (out.registros||[]).forEach(reg=>{
+     if(reg.area==="VACACIONES"&&reg.colaboradora){
+       vacaciones[reg.colaboradora]={desde:reg.turno||"",hasta:reg.cobertura||""};
+     }
+   });
+   renderVacaciones();reconstruirOpciones();renderPeople();actualizarDisponibilidad();
+ }catch(err){console.warn("Vacaciones no cargadas:",err);}
 }
 
 async function guardarNube(){
@@ -287,6 +573,7 @@ async function guardarNube(){
 }
 
 function limpiarSoloAsignaciones(){
+ libresDomingo=[];
  document.querySelectorAll(".assign").forEach(s=>s.value="");
  document.querySelectorAll(".rest").forEach(x=>x.checked=false);
 }
@@ -304,6 +591,10 @@ async function cargarNube(){
    limpiarSoloAsignaciones();
    const registros=out.registros||[];
    registros.forEach(reg=>{
+     if(reg.area==="LIBRE_SEMANA"){
+       libresDomingo.push({nombre:reg.colaboradora,dia:reg.turno,departamento:reg.posicion||"principal",horarioDomingo:reg.cobertura||HORARIO_DOMINGO});
+       return;
+     }
      if(String(reg.diaLibre).toLowerCase()==="sí" || reg.area==="DÍA LIBRE"){
        const cb=[...document.querySelectorAll(".rest")].find(x=>x.value===reg.colaboradora);
        if(cb)cb.checked=true;
@@ -334,6 +625,7 @@ async function cargarNube(){
    }else{
      st.className="status ok";
      st.innerHTML=`<b>Planificación cargada desde Google Sheets.</b> ${registros.length} registros encontrados para ${f}.`;
+     renderDomingo();
      validar();
    }
  }catch(err){
@@ -343,7 +635,7 @@ async function cargarNube(){
 }
 
 function snapshot(){
- const data={fecha:fecha.value,responsable:responsable.value,assign:[],rest:[]};
+ const data={fecha:fecha.value,responsable:responsable.value,assign:[],rest:[],vacaciones:vacaciones,libresDomingo:libresDomingo};
  document.querySelectorAll(".assign").forEach(s=>data.assign.push({area:s.dataset.area,index:s.dataset.index,value:s.value}));
  document.querySelectorAll(".rest:checked").forEach(x=>data.rest.push(x.value));
  return data;
@@ -351,18 +643,33 @@ function snapshot(){
 function guardar(){localStorage.setItem("planCaja",JSON.stringify(snapshot()));alert("Planificación guardada en este equipo.");}
 function cargar(){
  const raw=localStorage.getItem("planCaja");if(!raw)return alert("No hay planificación guardada.");
- const d=JSON.parse(raw);fecha.value=d.fecha||"";responsable.value=d.responsable||"";updateDay();
+ const d=JSON.parse(raw);fecha.value=d.fecha||"";responsable.value=d.responsable||"";vacaciones=d.vacaciones||vacaciones;libresDomingo=d.libresDomingo||[];updateDay();renderVacaciones();reconstruirOpciones();
  d.assign.forEach(a=>{let s=document.querySelector(`.assign[data-area="${a.area}"][data-index="${a.index}"]`);if(s)s.value=a.value});
- document.querySelectorAll(".rest").forEach(x=>x.checked=d.rest.includes(x.value));validar();
+ document.querySelectorAll(".rest").forEach(x=>x.checked=(d.rest||[]).includes(x.value));renderDomingo();validar();
 }
-function limpiar(){document.querySelectorAll(".assign").forEach(s=>s.value="");document.querySelectorAll(".rest").forEach(x=>x.checked=false);document.getElementById("status").className="status";document.getElementById("status").innerHTML='Complete la planificación y presione <b>Validar planificación</b>.'}
+function limpiar(){document.querySelectorAll(".assign").forEach(s=>s.value="");document.querySelectorAll(".rest").forEach(x=>x.checked=false);libresDomingo=[];renderDomingo();document.getElementById("status").className="status";document.getElementById("status").innerHTML='Complete la planificación y presione <b>Validar planificación</b>.'}
 function updateDay(){
  if(!fecha.value){dia.value="";return}
  const d=new Date(fecha.value+"T12:00:00");dia.value=d.toLocaleDateString("es-PA",{weekday:"long"});
+ reconstruirOpciones();
+ renderPeople();
+ renderDomingo();
 }
 fecha.addEventListener("change",updateDay);
-renderPeople();["principal","cosmetico","caballero","supermercado","boutique"].forEach(renderArea);renderRest();
+document.addEventListener("change",function(e){
+ if(e.target.matches(".assign,.time,.coverage")){
+   const d=fecha.value?new Date(fecha.value+"T12:00:00"):null;
+   if(d&&d.getDay()===0){
+     const trabajadores=trabajadoresDomingo();
+     libresDomingo=libresDomingo.filter(x=>trabajadores.includes(x.nombre));
+     renderDomingo();
+     renderHorarioDomingo();
+   }
+ }
+});
+renderPeople();["principal","cosmetico","caballero","supermercado","boutique"].forEach(renderArea);renderRest();renderVacaciones();
 fecha.value=new Date().toISOString().slice(0,10);updateDay();
+cargarVacacionesNube();
 </script>
 </body>
 </html>
